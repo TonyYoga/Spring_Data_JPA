@@ -1,0 +1,71 @@
+### Add categories START >>>>>>>>>>>>
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "Phone"}
+
+###
+
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "Leptop"}
+
+###
+
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "PC"}
+
+### Add categories END <<<<<<<<<<<<<<<<<<
+
+### Add products START >>>>>>>>>>>>>>>>>>
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Samsumg S10+", "price": 3000.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"IPhone X", "price": 3500.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Xiaomi A3", "price": 2700.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"MacBook Pro i9", "price": 8700.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Lenovo x10", "price": 6570.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"iMac PRO", "price": 18350.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"ABS Master-Pro Ryzen 5 2400G", "price": 13670.00,"category": {"id": "[category_id]"}}
+
+### Add products END <<<<<<<<<<<<<<<<<<<<<<<
