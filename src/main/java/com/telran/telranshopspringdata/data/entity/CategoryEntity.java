@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "products")
 @Entity
 @Table(name = "categories")
 public class CategoryEntity {

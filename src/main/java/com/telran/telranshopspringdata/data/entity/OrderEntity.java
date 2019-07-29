@@ -30,6 +30,6 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private UserEntity owner;
-    @OneToMany(mappedBy = "shoppingCart")
+    @OneToMany(mappedBy = "order")
     private List<ProductOrderEntity> products;
 }

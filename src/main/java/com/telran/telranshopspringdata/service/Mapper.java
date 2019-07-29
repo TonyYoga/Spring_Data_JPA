@@ -1,9 +1,6 @@
 package com.telran.telranshopspringdata.service;
 import com.telran.telranshopspringdata.controller.dto.*;
-import com.telran.telranshopspringdata.data.UserRepository;
 import com.telran.telranshopspringdata.data.entity.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import static java.util.stream.Collectors.*;
 
@@ -46,7 +43,7 @@ public class Mapper {
     private static ProductOrderDto map(ProductOrderEntity entity) {
         return ProductOrderDto.builder()
                 .product(ProductDto.builder()
-                        .id(entity.getId())
+                        .id(entity.getProductId())
                         .name(entity.getName())
                         .price(entity.getPrice())
                         .category(map(entity.getCategory()))
