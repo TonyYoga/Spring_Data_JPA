@@ -2,7 +2,7 @@
 POST http://localhost:8080/user
 Content-Type: application/json
 
-{"email": "vasya@mail.com","name": "Vasya","phone": "0545677889"}
+{"email": "petya@mail.com","name": "Petya","phone": "0543215678"}
 
 ###
 
@@ -20,6 +20,9 @@ GET http://localhost:8080/categories
 GET http://localhost:8080/products
 
 ###
+
+### Get products by category
+GET http://localhost:8080/products/7b5b74dd-b3bf-4712-822d-deeec17994f8
 
 ### Add Product to cart
 POST http://localhost:8080/cart/vasya@mail.com

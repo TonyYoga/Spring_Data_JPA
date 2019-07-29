@@ -4,6 +4,7 @@ package com.telran.telranshopspringdata.controller;
 import com.telran.telranshopspringdata.controller.dto.*;
 import com.telran.telranshopspringdata.service.Mapper;
 import com.telran.telranshopspringdata.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 public class UserController {
+    @Autowired
     UserService service;
 
     @PostMapping("user")
