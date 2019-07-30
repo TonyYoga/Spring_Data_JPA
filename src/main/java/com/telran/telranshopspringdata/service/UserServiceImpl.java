@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -72,22 +74,34 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ShoppingCartDto> addProductToCart(String userEmail, String productId, int count) {
         Optional<ProductEntity> product = productRepository.findById(productId);
-        if (!userRepository.existsById(userEmail) || product.isEmpty()) {
-            return Optional.empty();
+        Optional<UserEntity> user = userRepository.findById(userEmail);
+        if (user.isEmpty() || product.isEmpty()) {
+            throw new RuntimeException(String.format("User %s or %s product not found", userEmail, productId));
         }
+
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
         if (sce == null) {
-            sce = new ShoppingCartEntity();
-            shoppingCartRepository.save(sce);
+            sce = shoppingCartRepository.save(ShoppingCartEntity.builder()
+            .date(Timestamp.valueOf(LocalDateTime.now()))
+            .owner(user.get())
+            .build());
         }
-        productOrderRepository.save(ProductOrderEntity.builder()
-                .productId(productId)
-                .name(product.get().getName())
-                .price(product.get().getPrice())
-                .category(product.get().getCategory())
-                .count(count)
-                .shoppingCart(sce)
-                .build());
+        ProductOrderEntity poe = productOrderRepository.findProductOrderEntityByProductIdAndShoppingCart(productId, sce);
+        if (poe != null) {
+            poe.setCount(poe.getCount() + count);
+            poe.setPrice(product.get().getPrice());
+        } else {
+            poe = ProductOrderEntity.builder()
+                    .productId(productId)
+                    .name(product.get().getName())
+                    .price(product.get().getPrice())
+                    .category(product.get().getCategory())
+                    .count(count)
+                    .shoppingCart(sce)
+                    .build();
+            poe = productOrderRepository.save(poe);
+        }
+//        sce.getProducts().add(poe);
         return Optional.of(map(sce));
     }
 
@@ -141,7 +155,7 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             throw new RuntimeException(String.format("User %s not found", userEmail));
         }
-        var products = productOrderRepository.findProductOrderEntitiesByShoppingCartOwner_Email(userEmail);
+        var products = productOrderRepository.findProductOrderEntitiesByShoppingCart(user.get().getShoppingCart());
         BigDecimal totalCost = products.stream()
                 .map(ProductOrderEntity::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -149,11 +163,17 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Insufficient fonds");
         }
         user.get().setBalance(user.get().getBalance().subtract(totalCost));
-        OrderEntity order = orderRepository.save(new OrderEntity());
+        OrderEntity order = orderRepository.save(OrderEntity.builder()
+                .date(Timestamp.valueOf(LocalDateTime.now()))
+                .owner(user.get())
+                .status(OrderStatus.DONE)
+                .build());
         products.forEach(productOrderEntity -> {
                     productOrderEntity.setOrder(order);
                     productOrderEntity.setShoppingCart(null);
                 });
+        order.setProducts(products);
+        user.get().getOrders().add(order);
         return Optional.of(map(order));
     }
 }
