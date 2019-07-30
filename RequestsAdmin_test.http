@@ -1,0 +1,112 @@
+### Add categories START >>>>>>>>>>>>
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "Phone"}
+
+###
+
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "Leptop"}
+
+###
+
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "PC"}
+
+### Add categories END <<<<<<<<<<<<<<<<<<
+
+### Add products START >>>>>>>>>>>>>>>>>>
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Samsumg S10+", "price": 3000.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"IPhone X", "price": 3500.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Xiaomi A3", "price": 2700.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"MacBook Pro i9", "price": 8700.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"Lenovo x10", "price": 6570.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"iMac PRO", "price": 18350.00,"category": {"id": "[category_id]"}}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"ABS Master-Pro Ryzen 5 2400G", "price": 13670.00,"category": {"id": "[category_id]"}}
+
+### Add products END <<<<<<<<<<<<<<<<<<<<<<<
+
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"IPhone XXX", "price": 13500.00,"category": {"id": "7fce7f34-f510-4f72-902e-8501536461ce"}}
+
+### Delete product
+DELETE http://localhost:8080/admin/product/f62869a1-3c26-4585-b847-6ada0855517a
+
+
+### Add some category
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"name": "AbraKadabra"}
+
+### Delete category
+DELETE http://localhost:8080/admin/category/d0b482a2-3408-412d-aa36-3179aa7b8968
+
+
+### Update category name
+PUT http://localhost:8080/admin/category
+Content-Type: application/json
+
+{"catId":"d4034ac5-3abc-4085-be47-3facb3afe0e6", "catName":"SomeName"}
+###
+
+### Update product price
+PUT http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"prodId":"d4034ac5-3abc-4085-be47-3facb3afe0e6", "price":666.66}
+###
+
+### Update user balance
+PUT http://localhost:8080/admin/user
+Content-Type: application/json
+
+{"userId":"johndo@mail.com", "balance":10000.00}
+###

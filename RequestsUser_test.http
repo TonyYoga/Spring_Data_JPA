@@ -1,0 +1,55 @@
+### Add user profile
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{"email": "johndo@mail.com","name": "John Do","phone": "0551112233"}
+
+###
+
+### GetUser Profile
+GET http://localhost:8080/user/johndo@mail.com
+
+###
+
+### Get all categories
+GET http://localhost:8080/categories
+
+###
+
+### Get all products
+GET http://localhost:8080/products
+
+###
+
+### Add Product to cart
+POST http://localhost:8080/cart/johndo@mail.com
+Content-Type: application/json
+
+{"productId":"f1654438-ebb7-4890-bdf4-71b272cd0f60","count":1}
+
+###
+
+### Get User Shopping cart
+GET http://localhost:8080/cart/johndo@mail.com
+
+###
+
+### Remove Product from cart
+DELETE http://localhost:8080/cart/johndo@mail.com/f1654438-ebb7-4890-bdf4-71b272cd0f60/1
+
+###
+
+### Clear cart
+DELETE http://localhost:8080/cart/johndo@mail.com/all
+
+###
+
+### Checkout User Shopping cart
+GET http://localhost:8080/checkout/johndo@mail.com
+
+###
+
+### Get User orders
+GET http://localhost:8080/orders/johndo@mail.com
+
+###
