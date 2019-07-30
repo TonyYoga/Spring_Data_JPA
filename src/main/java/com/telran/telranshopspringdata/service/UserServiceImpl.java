@@ -1,10 +1,8 @@
 package com.telran.telranshopspringdata.service;
 
 import com.telran.telranshopspringdata.controller.dto.*;
-import com.telran.telranshopspringdata.data.CategoryRepository;
-import com.telran.telranshopspringdata.data.ProductRepository;
-import com.telran.telranshopspringdata.data.UserRepository;
-import com.telran.telranshopspringdata.data.entity.UserEntity;
+import com.telran.telranshopspringdata.data.*;
+import com.telran.telranshopspringdata.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -29,6 +27,12 @@ public class UserServiceImpl implements UserService {
     ProductRepository productRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    ProductOrderRepository productOrderRepository;
+    @Autowired
+    OrderRepository orderRepository;
 
     @Override
     public Optional<UserDto> addUserInfo(String email, String name, String phone) {
@@ -69,31 +73,89 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<ShoppingCartDto> addProductToCart(String userEmail, String productId, int count) {
-        return Optional.empty();
+        Optional<ProductEntity> product = productRepository.findById(productId);
+        if (!userRepository.existsById(userEmail) || product.isEmpty()) {
+            return Optional.empty();
+        }
+        ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
+        if (sce == null) {
+            sce = new ShoppingCartEntity();
+            shoppingCartRepository.save(sce);
+        }
+        productOrderRepository.save(ProductOrderEntity.builder()
+                .productId(productId)
+                .name(product.get().getName())
+                .price(product.get().getPrice())
+                .category(product.get().getCategory())
+                .count(count)
+                .shoppingCart(sce)
+                .build());
+        return Optional.of(map(sce));
     }
 
     @Override
     public Optional<ShoppingCartDto> removeProductFromCart(String userEmail, String productId, int count) {
-        return Optional.empty();
+        ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
+        if (sce == null) {
+            return Optional.empty();
+        }
+        ProductOrderEntity poe = productOrderRepository.findProductOrderEntityByProductIdAndShoppingCart(productId, sce);
+        if (poe == null) {
+            return Optional.of(map(sce));
+        }
+        if (poe.getCount() <= count) {
+            productOrderRepository.delete(poe);
+            return Optional.of(map(sce));
+        }
+        poe.setCount(poe.getCount() - count);
+        return Optional.of(map(sce));
     }
 
     @Override
     public Optional<ShoppingCartDto> getShoppingCart(String userEmail) {
-        return Optional.empty();
+        ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
+        return sce != null ? Optional.of(map(sce)) : Optional.empty();
     }
 
     @Override
     public boolean clearShoppingCart(String userEmail) {
-        return false;
+        ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
+        if (sce == null) {
+            return false;
+        }
+        if (sce.getProducts().isEmpty()) {
+            return true;
+        }
+        productOrderRepository.deleteByShoppingCart(sce);
+        return true;
     }
 
     @Override
     public List<OrderDto> getOrders(String userEmail) {
-        return null;
+        return orderRepository.findByOwner_Email(userEmail).stream()
+                .map(Mapper::map)
+                .collect(toList());
     }
 
     @Override
     public Optional<OrderDto> checkout(String userEmail) {
-        return Optional.empty();
+        var user = userRepository.findById(userEmail);
+        if (user.isEmpty()) {
+            throw new RuntimeException(String.format("User %s not found", userEmail));
+        }
+        var products = productOrderRepository.findProductOrderEntitiesByShoppingCartOwner(userEmail);
+        BigDecimal totalCost = products.stream()
+                .map(ProductOrderEntity::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (user.get().getBalance().compareTo(totalCost) < 0) {
+            throw new RuntimeException("Insufficient fonds");
+        }
+        user.get().setBalance(user.get().getBalance().subtract(totalCost));
+        OrderEntity order = orderRepository.save(new OrderEntity());
+        products.forEach(productOrderEntity -> {
+                    productOrderEntity.setOrder(order);
+                    productOrderEntity.setShoppingCart(null);
+                });
+        return Optional.of(map(order));
     }
 }
