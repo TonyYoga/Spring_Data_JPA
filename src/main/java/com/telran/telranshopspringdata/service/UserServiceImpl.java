@@ -9,14 +9,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.telran.telranshopspringdata.service.Mapper.*;
-import static java.util.stream.Collectors.*;
+import static com.telran.telranshopspringdata.service.Mapper.map;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -143,7 +141,7 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             throw new RuntimeException(String.format("User %s not found", userEmail));
         }
-        var products = productOrderRepository.findProductOrderEntitiesByShoppingCartOwner(userEmail);
+        var products = productOrderRepository.findProductOrderEntitiesByShoppingCartOwner_Email(userEmail);
         BigDecimal totalCost = products.stream()
                 .map(ProductOrderEntity::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
