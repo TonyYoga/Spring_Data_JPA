@@ -1,5 +1,6 @@
 package com.telran.telranshopspringdata.data.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(exclude = "products")
+@Builder
 @Entity
 @Table(name = "categories")
 public class CategoryEntity {
