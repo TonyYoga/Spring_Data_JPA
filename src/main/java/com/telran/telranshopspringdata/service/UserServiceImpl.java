@@ -99,10 +99,9 @@ public class UserServiceImpl implements UserService {
                     .count(count)
                     .shoppingCart(sce)
                     .build();
-            poe = productOrderRepository.save(poe);
+            productOrderRepository.save(poe);
         }
-//        sce.getProducts().add(poe);
-        return Optional.of(map(sce));
+        return Optional.of(map(shoppingCartRepository.findById(sce.getId()).get()));
     }
 
     @Override
@@ -173,7 +172,7 @@ public class UserServiceImpl implements UserService {
                     productOrderEntity.setShoppingCart(null);
                 });
         order.setProducts(products);
-        user.get().getOrders().add(order);
+        Optional<OrderEntity> test = orderRepository.findById(order.getId());
         return Optional.of(map(order));
     }
 }

@@ -60,7 +60,7 @@ public class AdminController {
     @PutMapping("user")
     public SuccessResponseDto updUserBalance(@RequestBody UpdUserBalanceDto userBalance) {
         if (adminService.addBalance(userBalance.getUserId(), userBalance.getBalance())) {
-            return new SuccessResponseDto(String.format("Balance of user %s was updated to %f", userBalance.getUserId(), userBalance.getBalance()));
+            return new SuccessResponseDto(String.format("Balance of user %s was updated to %.2f", userBalance.getUserId(), userBalance.getBalance()));
         }
         throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Balance of user %s wasn't updated", userBalance.getUserId()));
     }
