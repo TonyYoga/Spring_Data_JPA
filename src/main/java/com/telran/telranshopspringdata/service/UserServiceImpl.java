@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserService {
                     .shoppingCart(sce)
                     .build();
             productOrderRepository.save(poe);
+            sce.getProducts().add(poe);
         }
         return Optional.of(map(sce));
     }
@@ -115,6 +116,7 @@ public class UserServiceImpl implements UserService {
         }
         if (poe.getCount() <= count) {
             productOrderRepository.delete(poe);
+            sce.getProducts().remove(poe);
             return Optional.of(map(sce));
         }
         poe.setCount(poe.getCount() - count);
@@ -155,7 +157,7 @@ public class UserServiceImpl implements UserService {
         }
         var products = productOrderRepository.findProductOrderEntitiesByShoppingCart(user.get().getShoppingCart());
         BigDecimal totalCost = products.stream()
-                .map(ProductOrderEntity::getPrice)
+                .map(prod -> prod.getPrice().multiply(BigDecimal.valueOf(prod.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (user.get().getBalance().compareTo(totalCost) < 0) {
             throw new RuntimeException("Insufficient fonds");
