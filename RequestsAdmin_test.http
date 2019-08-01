@@ -16,6 +16,20 @@ Content-Type: application/json
 POST http://localhost:8080/admin/category
 Content-Type: application/json
 
+{"name": "Test"}
+
+###
+
+POST http://localhost:8080/admin/product
+Content-Type: application/json
+
+{"name":"test_product", "price": 1.00,"category": {"id": "e4efe69a-288d-43d4-81dd-055202bdf1e5"}}
+
+###
+
+POST http://localhost:8080/admin/category
+Content-Type: application/json
+
 {"name": "PC"}
 
 ### Add categories END <<<<<<<<<<<<<<<<<<
@@ -87,7 +101,7 @@ Content-Type: application/json
 {"name": "AbraKadabra"}
 
 ### Delete category
-DELETE http://localhost:8080/admin/category/d0b482a2-3408-412d-aa36-3179aa7b8968
+DELETE http://localhost:8080/admin/category/e4efe69a-288d-43d4-81dd-055202bdf1e5
 
 
 ### Update category name

@@ -25,7 +25,7 @@ GET http://localhost:8080/products
 POST http://localhost:8080/cart/johndo@mail.com
 Content-Type: application/json
 
-{"productId":"f1654438-ebb7-4890-bdf4-71b272cd0f60","count":1}
+{"productId":"d2b71ce3-4c70-4061-afc5-f7f3c95e660b","count":1}
 
 ###
 
@@ -35,7 +35,7 @@ GET http://localhost:8080/cart/johndo@mail.com
 ###
 
 ### Remove Product from cart
-DELETE http://localhost:8080/cart/johndo@mail.com/f1654438-ebb7-4890-bdf4-71b272cd0f60/1
+DELETE http://localhost:8080/cart/johndo@mail.com/d2b71ce3-4c70-4061-afc5-f7f3c95e660b/1
 
 ###
 

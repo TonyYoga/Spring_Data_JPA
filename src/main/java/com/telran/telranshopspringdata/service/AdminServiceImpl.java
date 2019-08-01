@@ -1,6 +1,7 @@
 package com.telran.telranshopspringdata.service;
 
 import com.telran.telranshopspringdata.data.CategoryRepository;
+import com.telran.telranshopspringdata.data.ProductOrderRepository;
 import com.telran.telranshopspringdata.data.ProductRepository;
 import com.telran.telranshopspringdata.data.UserRepository;
 import com.telran.telranshopspringdata.data.entity.CategoryEntity;
@@ -22,6 +23,9 @@ public class AdminServiceImpl implements AdminService {
     ProductRepository productRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ProductOrderRepository productOrderRepository;
+
 
     @Override
     public String addCategory(String categoryName) {
@@ -59,6 +63,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean removeCategory(String categoryId) {
+        productOrderRepository.isCategoryNotUsed(categoryId);
         if (!categoryRepository.existsById(categoryId)) {
             return false;
         }
