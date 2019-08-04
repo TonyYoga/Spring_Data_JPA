@@ -41,41 +41,40 @@ public class UserController {
         return userService.getProductsByCategory(categoryName);
     }
 
-    @PostMapping("cart/{userEmail}")
-    public ShoppingCartDto addProductToCart(@PathVariable("userEmail") String userEmail,
-                                            @RequestBody AddProductDto dto) {
-        return userService.addProductToCart(userEmail, dto.getProductId(), dto.getCount())
+    @PostMapping("cart")
+    public ShoppingCartDto addProductToCart(@RequestBody AddProductDto dto, Principal principal) {
+        return userService.addProductToCart(principal.getName(), dto.getProductId(), dto.getCount())
                 .orElseThrow();
     }
 
-    @GetMapping("cart/{userEmail}")
-    public ShoppingCartDto getShoppingCart(@PathVariable("userEmail") String userEmail) {
-        return userService.getShoppingCart(userEmail)
+    @GetMapping("cart")
+    public ShoppingCartDto getShoppingCart(Principal principal) {
+        return userService.getShoppingCart(principal.getName())
                 .orElseThrow();
     }
 
-    @DeleteMapping("cart/{userEmail}/{productId}/{count}")
-    public ShoppingCartDto removeProductFromCart(@PathVariable("userEmail") String userEmail,
-                                                 @PathVariable("productId") String productId,
-                                                 @PathVariable("count") int count) {
-        return userService.removeProductFromCart(userEmail,productId,count)
+    @DeleteMapping("cart/{productId}/{count}")
+    public ShoppingCartDto removeProductFromCart(@PathVariable("productId") String productId,
+                                                 @PathVariable("count") int count,
+                                                 Principal principal) {
+        return userService.removeProductFromCart(principal.getName(),productId,count)
                 .orElseThrow();
     }
 
-    @DeleteMapping("cart/{userEmail}/all")
-    public void clearShoppingCart(@PathVariable("userEmail") String userEmail) {
-        userService.clearShoppingCart(userEmail);
+    @DeleteMapping("cart/all")
+    public void clearShoppingCart(Principal principal) {
+        userService.clearShoppingCart(principal.getName());
     }
 
-    @GetMapping("orders/{userEmail}")
-    public List<OrderDto> getAllOrdersByEmail(@PathVariable("userEmail")String userEmail){
-        return userService.getOrders(userEmail);
+    @GetMapping("orders")
+    public List<OrderDto> getAllOrdersByEmail(Principal principal){
+        return userService.getOrders(principal.getName());
     }
 
 
-    @GetMapping("checkout/{userEmail}")
-    public OrderDto checkout(@PathVariable("userEmail") String userEmail) {
-        return userService.checkout(userEmail)
+    @GetMapping("checkout")
+    public OrderDto checkout(Principal principal) {
+        return userService.checkout(principal.getName())
                 .orElseThrow();
     }
 }

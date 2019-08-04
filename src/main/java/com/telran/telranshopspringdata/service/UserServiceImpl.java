@@ -79,15 +79,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<ShoppingCartDto> addProductToCart(String userEmail, String productId, int count) {
-        /* TODO
-        1. Связать профайл(юзеринфо) и юзера(детали)
-        2. Добавить проверку, если у пользователя нет профайла - не пускать в корзину(все методы)
-        3. Все методы через секюрити
-        4. Убрать метод удаления корзины
-        - 5. Добавление админа только вручную
-        6. Добавить работу с эксепшен
-        7. Доп таблицы от Гриши со статистикой
-         */
         Optional<ProductEntity> product = productRepository.findById(productId);
         Optional<UserEntity> user = userRepository.findById(userEmail);
         if (user.isEmpty()) {

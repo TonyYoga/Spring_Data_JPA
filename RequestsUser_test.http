@@ -38,7 +38,8 @@ Content-Type: application/json
 ###
 
 ### Get User Shopping cart
-GET http://localhost:8080/cart/johndo@mail.com
+GET http://localhost:8080/cart
+Authorization: Basic johndo@mail.com 12345.com
 
 ###
 
@@ -58,6 +59,7 @@ GET http://localhost:8080/checkout/johndo@mail.com
 ###
 
 ### Get User orders
-GET http://localhost:8080/orders/johndo@mail.com
+GET http://localhost:8080/orders
+Authorization: Basic johndo@mail.com 12345.com
 
 ###
