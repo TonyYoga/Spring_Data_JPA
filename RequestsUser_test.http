@@ -1,4 +1,11 @@
+###Registartion
+POST http://localhost:8080/registration
+Content-Type: application/json
+
+{"email":"petya@mail.com","password":"12345.com"}
+
 ### Add user profile
+
 POST http://localhost:8080/user
 Content-Type: application/json
 
@@ -7,7 +14,8 @@ Content-Type: application/json
 ###
 
 ### GetUser Profile
-GET http://localhost:8080/user/johndo@mail.com
+GET http://localhost:8080/user
+Authorization: Basic johndo@mail.com 12345.com
 
 ###
 
@@ -25,7 +33,7 @@ GET http://localhost:8080/products
 POST http://localhost:8080/cart/johndo@mail.com
 Content-Type: application/json
 
-{"productId":"d2b71ce3-4c70-4061-afc5-f7f3c95e660b","count":1}
+{"productId":"87e4c2da-2077-4b44-8107-bdc525a4df4f","count":3}
 
 ###
 
@@ -35,7 +43,7 @@ GET http://localhost:8080/cart/johndo@mail.com
 ###
 
 ### Remove Product from cart
-DELETE http://localhost:8080/cart/johndo@mail.com/d2b71ce3-4c70-4061-afc5-f7f3c95e660b/1
+DELETE http://localhost:8080/cart/johndo@mail.com/87e4c2da-2077-4b44-8107-bdc525a4df4f/1
 
 ###
 

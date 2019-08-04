@@ -6,6 +6,8 @@ import com.telran.telranshopspringdata.data.ProductRepository;
 import com.telran.telranshopspringdata.data.UserRepository;
 import com.telran.telranshopspringdata.data.entity.CategoryEntity;
 import com.telran.telranshopspringdata.data.entity.ProductEntity;
+import com.telran.telranshopspringdata.service.exceptions.NotFoundServiceException;
+import com.telran.telranshopspringdata.service.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -35,14 +37,14 @@ public class AdminServiceImpl implements AdminService {
                     .build()
             ).getId();
         }
-        return null;
+        throw new ServiceException(String.format("Category %s already exist!", categoryName));
     }
 
     @Override
     public String addProduct(String productName, BigDecimal price, String categoryId) {
         Optional<CategoryEntity> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
-            throw new RuntimeException(String.format("No such category with id %s",categoryId));
+            throw new NotFoundServiceException(String.format("No such category with id %s",categoryId));
         }
         return productRepository.save(ProductEntity.builder()
                 .category(category.get())
@@ -55,20 +57,26 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public boolean removeProduct(String productId) {
         if (!productRepository.existsById(productId)) {
-            return false;
+            throw new NotFoundServiceException(String.format("No such product with id %s:",productId));
         }
         productRepository.deleteById(productId);
         return true;
     }
 
+    /**
+     * Method removeCategory not allowed!
+     *
+     * @throws ServiceException
+     */
     @Override
     public boolean removeCategory(String categoryId) {
-        productOrderRepository.isCategoryNotUsed(categoryId);
+/*        productOrderRepository.isCategoryNotUsed(categoryId);
         if (!categoryRepository.existsById(categoryId)) {
             return false;
         }
         categoryRepository.deleteById(categoryId);
-        return true;
+        return true;*/
+        throw new ServiceException("Method removeCategory not allowed!");
     }
 
     @Override
@@ -85,7 +93,7 @@ public class AdminServiceImpl implements AdminService {
     public boolean changeProductPrice(String productId, BigDecimal price) {
         Optional<ProductEntity> product = productRepository.findById(productId);
         if (product.isEmpty()) {
-            throw new RuntimeException(String.format("Product %s not found", productId));
+            throw new NotFoundServiceException(String.format("Product %s not found", productId));
         }
         product.get().setPrice(price);
         return true;
@@ -95,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
     public boolean addBalance(String userEmail, BigDecimal balance) {
         var user = userRepository.findById(userEmail);
         if (user.isEmpty()) {
-            throw new RuntimeException(String.format("User %s not found", userEmail));
+            throw new NotFoundServiceException(String.format("User %s not found", userEmail));
         }
         user.get().setBalance(balance);
         return true;

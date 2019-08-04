@@ -3,6 +3,8 @@ package com.telran.telranshopspringdata.service;
 import com.telran.telranshopspringdata.controller.dto.*;
 import com.telran.telranshopspringdata.data.*;
 import com.telran.telranshopspringdata.data.entity.*;
+import com.telran.telranshopspringdata.service.exceptions.NotFoundServiceException;
+import com.telran.telranshopspringdata.service.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.telran.telranshopspringdata.service.Mapper.map;
@@ -40,13 +43,17 @@ public class UserServiceImpl implements UserService {
             userRepository.save(entity);
             return Optional.of(map(entity));
         }
-        return Optional.empty();
+        throw new ServiceException(String.format("User %s already exist!"));
     }
 
     @Override
     public Optional<UserDto> getUserInfo(String email) {
-        UserEntity entity = userRepository.findById(email).orElseThrow();
-        return Optional.of(map(entity));
+        try {
+            UserEntity entity = userRepository.findById(email).orElseThrow();
+            return Optional.of(map(entity));
+        } catch (NoSuchElementException ex) {
+            throw new ServiceException("%s's profile not found");
+        }
     }
 
     @Override
@@ -72,10 +79,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<ShoppingCartDto> addProductToCart(String userEmail, String productId, int count) {
+        /* TODO
+        1. Связать профайл(юзеринфо) и юзера(детали)
+        2. Добавить проверку, если у пользователя нет профайла - не пускать в корзину(все методы)
+        3. Все методы через секюрити
+        4. Убрать метод удаления корзины
+        - 5. Добавление админа только вручную
+        6. Добавить работу с эксепшен
+        7. Доп таблицы от Гриши со статистикой
+         */
         Optional<ProductEntity> product = productRepository.findById(productId);
         Optional<UserEntity> user = userRepository.findById(userEmail);
-        if (user.isEmpty() || product.isEmpty()) {
-            throw new RuntimeException(String.format("User %s or %s product not found", userEmail, productId));
+        if (user.isEmpty()) {
+            throw new NotFoundServiceException(String.format("User %s  not found", userEmail));
+        }
+        if(product.isEmpty()){
+            throw new NotFoundServiceException(String.format("Product %s not found", userEmail, productId));
         }
 
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
@@ -108,11 +127,11 @@ public class UserServiceImpl implements UserService {
     public Optional<ShoppingCartDto> removeProductFromCart(String userEmail, String productId, int count) {
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
         if (sce == null) {
-            return Optional.empty();
+            throw new NotFoundServiceException(String.format("Shopping cart %s not found", userEmail));
         }
         ProductOrderEntity poe = productOrderRepository.findProductOrderEntityByProductIdAndShoppingCart(productId, sce);
         if (poe == null) {
-            return Optional.of(map(sce));
+            throw new NotFoundServiceException(String.format("Product order %s not found", productId));
         }
         if (poe.getCount() <= count) {
             productOrderRepository.delete(poe);
@@ -126,14 +145,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ShoppingCartDto> getShoppingCart(String userEmail) {
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
-        return sce != null ? Optional.of(map(sce)) : Optional.empty();
+        if (sce == null) {
+            throw new NotFoundServiceException(String.format("Shopping cart %s not found", userEmail));
+        }
+        return Optional.of(map(sce));
     }
 
     @Override
     public boolean clearShoppingCart(String userEmail) {
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
         if (sce == null) {
-            return false;
+            throw new NotFoundServiceException(String.format("Shopping cart %s not found", userEmail));
         }
         if (sce.getProducts().isEmpty()) {
             return true;
@@ -153,14 +175,14 @@ public class UserServiceImpl implements UserService {
     public Optional<OrderDto> checkout(String userEmail) {
         var user = userRepository.findById(userEmail);
         if (user.isEmpty()) {
-            throw new RuntimeException(String.format("User %s not found", userEmail));
+            throw new NotFoundServiceException(String.format("User %s  not found", userEmail));
         }
         var products = productOrderRepository.findProductOrderEntitiesByShoppingCart(user.get().getShoppingCart());
         BigDecimal totalCost = products.stream()
                 .map(prod -> prod.getPrice().multiply(BigDecimal.valueOf(prod.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (user.get().getBalance().compareTo(totalCost) < 0) {
-            throw new RuntimeException("Insufficient fonds");
+            throw new ServiceException("Insufficient fonds");
         }
         user.get().setBalance(user.get().getBalance().subtract(totalCost));
         OrderEntity order = orderRepository.save(OrderEntity.builder()
