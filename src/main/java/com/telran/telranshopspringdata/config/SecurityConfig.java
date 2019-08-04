@@ -46,7 +46,10 @@ public class SecurityConfig {
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/registration").permitAll()
                     .antMatchers(HttpMethod.GET, "products/**","/categories").permitAll()
-                    .antMatchers("/user/**").hasRole("USER")
+                    .antMatchers("/user/**",
+                            "/cart/**",
+                            "/orders",
+                            "/checkout").hasRole("USER")
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().denyAll()
                     .and()
