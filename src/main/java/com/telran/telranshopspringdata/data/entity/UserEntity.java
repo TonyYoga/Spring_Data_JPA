@@ -1,9 +1,6 @@
 package com.telran.telranshopspringdata.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(of = "email")
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -28,4 +26,8 @@ public class UserEntity {
     private ShoppingCartEntity shoppingCart;
     @OneToMany(mappedBy = "owner")
     private List<OrderEntity> orders;
+
+    @OneToOne
+    @JoinColumn(name = "email")
+    private UserDetailsEntity detailsEntity;
 }

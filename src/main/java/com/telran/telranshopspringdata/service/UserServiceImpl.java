@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDto> addUserInfo(String email, String name, String phone) {
         if(!userRepository.existsById(email)){
-            UserEntity entity = new UserEntity(email,name,phone, BigDecimal.ZERO,null,null);
+            UserEntity entity = new UserEntity(email,name,phone, BigDecimal.ZERO,null,null, null);
             userRepository.save(entity);
             return Optional.of(map(entity));
         }
@@ -91,9 +92,11 @@ public class UserServiceImpl implements UserService {
         ShoppingCartEntity sce = shoppingCartRepository.findShoppingCartEntityByOwner_Email(userEmail);
         if (sce == null) {
             sce = shoppingCartRepository.save(ShoppingCartEntity.builder()
-            .date(Timestamp.valueOf(LocalDateTime.now()))
-            .owner(user.get())
-            .build());
+                    .date(Timestamp.valueOf(LocalDateTime.now()))
+                    .owner(user.get())
+                    .products(new ArrayList<>())
+                    .build());
+            user.get().setShoppingCart(sce);
         }
         ProductOrderEntity poe = productOrderRepository.findProductOrderEntityByProductIdAndShoppingCart(productId, sce);
         if (poe != null) {
@@ -166,7 +169,7 @@ public class UserServiceImpl implements UserService {
     public Optional<OrderDto> checkout(String userEmail) {
         var user = userRepository.findById(userEmail);
         if (user.isEmpty()) {
-            throw new NotFoundServiceException(String.format("User %s  not found", userEmail));
+            throw new NotFoundServiceException(String.format("Profile %s not found", userEmail));
         }
         var products = productOrderRepository.findProductOrderEntitiesByShoppingCart(user.get().getShoppingCart());
         BigDecimal totalCost = products.stream()
@@ -182,9 +185,9 @@ public class UserServiceImpl implements UserService {
                 .status(OrderStatus.DONE)
                 .build());
         products.forEach(productOrderEntity -> {
-                    productOrderEntity.setOrder(order);
-                    productOrderEntity.setShoppingCart(null);
-                });
+            productOrderEntity.setOrder(order);
+            productOrderEntity.setShoppingCart(null);
+        });
         order.setProducts(products);
         return Optional.of(map(order));
     }

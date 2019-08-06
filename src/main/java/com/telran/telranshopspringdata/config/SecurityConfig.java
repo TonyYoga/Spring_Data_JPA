@@ -45,7 +45,7 @@ public class SecurityConfig {
                     .csrf().disable()
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/registration").permitAll()
-                    .antMatchers(HttpMethod.GET, "products/**","/categories").permitAll()
+                    .antMatchers(HttpMethod.GET, "/products/**","/categories").permitAll()
                     .antMatchers("/user/**",
                             "/cart/**",
                             "/orders",

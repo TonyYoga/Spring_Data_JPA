@@ -2,20 +2,21 @@
 POST http://localhost:8080/registration
 Content-Type: application/json
 
-{"email":"petya@mail.com","password":"12345.com"}
+{"email":"sofa@mail.com","password":"12345.com"}
 
 ### Add user profile
 
 POST http://localhost:8080/user
+Authorization: Basic sofa@mail.com 12345.com
 Content-Type: application/json
 
-{"email": "johndo@mail.com","name": "John Do","phone": "0551112233"}
+{"email": "sofa@mail.com","name": "Sofa Do","phone": "0551112234"}
 
 ###
 
 ### GetUser Profile
 GET http://localhost:8080/user
-Authorization: Basic johndo@mail.com 12345.com
+Authorization: Basic sofa@mail.com 12345.com
 
 ###
 
@@ -30,36 +31,40 @@ GET http://localhost:8080/products
 ###
 
 ### Add Product to cart
-POST http://localhost:8080/cart/johndo@mail.com
+POST http://localhost:8080/cart/
+Authorization: Basic sofa@mail.com 12345.com
 Content-Type: application/json
 
-{"productId":"87e4c2da-2077-4b44-8107-bdc525a4df4f","count":3}
+{"productId":"87ccb4e0-15a4-4f73-a4a6-8765ff270def","count":1}
 
 ###
 
 ### Get User Shopping cart
 GET http://localhost:8080/cart
-Authorization: Basic johndo@mail.com 12345.com
+Authorization: Basic sofa@mail.com 12345.com
 
 ###
 
 ### Remove Product from cart
-DELETE http://localhost:8080/cart/johndo@mail.com/87e4c2da-2077-4b44-8107-bdc525a4df4f/1
+DELETE http://localhost:8080/cart/87ccb4e0-15a4-4f73-a4a6-8765ff270def/1
+Authorization: Basic sofa@mail.com 12345.com
 
 ###
 
 ### Clear cart
-DELETE http://localhost:8080/cart/johndo@mail.com/all
+DELETE http://localhost:8080/cart/all
+Authorization: Basic sofa@mail.com 12345.com
 
 ###
 
 ### Checkout User Shopping cart
-GET http://localhost:8080/checkout/johndo@mail.com
+GET http://localhost:8080/checkout
+Authorization: Basic sofa@mail.com 12345.com
 
 ###
 
 ### Get User orders
 GET http://localhost:8080/orders
-Authorization: Basic johndo@mail.com 12345.com
+Authorization: Basic sofa@mail.com 12345.com
 
 ###

@@ -26,4 +26,7 @@ public class UserDetailsEntity {
             )
     )
     private List<UserRoleEntity> roles;
+
+    @OneToOne(mappedBy = "detailsEntity")
+    private UserEntity userEntity;
 }

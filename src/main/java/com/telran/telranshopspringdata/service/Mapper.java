@@ -1,8 +1,11 @@
 package com.telran.telranshopspringdata.service;
+
 import com.telran.telranshopspringdata.controller.dto.*;
 import com.telran.telranshopspringdata.data.entity.*;
+import com.telran.telranshopspringdata.data.projection.ProductStatistics;
+import com.telran.telranshopspringdata.data.projection.UserStatistics;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 public class Mapper {
     public static UserDto map(UserEntity entity) {
@@ -40,7 +43,7 @@ public class Mapper {
                 .build();
     }
 
-    private static ProductOrderDto map(ProductOrderEntity entity) {
+    public static ProductOrderDto map(ProductOrderEntity entity) {
         return ProductOrderDto.builder()
                 .product(ProductDto.builder()
                         .id(entity.getProductId())
@@ -61,6 +64,23 @@ public class Mapper {
                         .map(Mapper::map)
                         .collect(toList()))
                 .status(entity.getStatus().name())
+                .build();
+    }
+
+    static ProductStatisticDto map(ProductStatistics statistics) {
+        return ProductStatisticDto.builder()
+                .productName(statistics.getProductName())
+                .productCategory(statistics.getProductCategory())
+                .numberOfPurchases(statistics.getNumberOfPurchases())
+                .totalAmount(statistics.getTotalAmount())
+                .build();
+    }
+
+    static UserStatisticDto map(UserStatistics statistics) {
+        return UserStatisticDto.builder()
+                .userEmail(statistics.getUserEmail())
+                .totalAmount(statistics.getTotalAmount())
+                .totalProductsCount(statistics.getTotalProductsCount())
                 .build();
     }
 }

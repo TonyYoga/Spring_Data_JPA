@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("admin")
 public class AdminController {
@@ -63,5 +65,25 @@ public class AdminController {
             return new SuccessResponseDto(String.format("Balance of user %s was updated to %.2f", userBalance.getUserId(), userBalance.getBalance()));
         }
         throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Balance of user %s wasn't updated", userBalance.getUserId()));
+    }
+
+    @GetMapping("statistic/mostPopularProducts")
+    public List<ProductStatisticDto> getMostPopularProduct(){
+        return adminService.getMostPopularProduct();
+    }
+
+    @GetMapping("statistic/mostProfitableProducts")
+    public List<ProductStatisticDto> getMostProfitableProduct(){
+        return adminService.getMostProfitableProduct();
+    }
+
+    @GetMapping("statistic/mostActiveUser")
+    public List<UserStatisticDto> getMostActiveUser(){
+        return adminService.getMostActiveUser();
+    }
+
+    @GetMapping("statistic/mostProfitableUser")
+    public List<UserStatisticDto> getMostProfitableUser(){
+        return adminService.getMostProfitableUser();
     }
 }

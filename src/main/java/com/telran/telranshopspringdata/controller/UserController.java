@@ -15,8 +15,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping("user")
-    public UserDto addUserInfo(@RequestBody UserDto user) {
-        return userService.addUserInfo(user.getEmail(), user.getName(), user.getPhone())
+    public UserDto addUserInfo(@RequestBody UserDto user, Principal principal) {
+        return userService.addUserInfo(principal.getName(), user.getName(), user.getPhone())
                 .orElseThrow();
     }
 

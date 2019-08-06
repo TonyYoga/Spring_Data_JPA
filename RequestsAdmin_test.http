@@ -1,5 +1,6 @@
 ### Add categories START >>>>>>>>>>>>
 POST http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name": "Phone"}
@@ -7,6 +8,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name": "Leptop"}
@@ -14,6 +16,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name": "Test"}
@@ -21,6 +24,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"test_product", "price": 1.00,"category": {"id": "e4efe69a-288d-43d4-81dd-055202bdf1e5"}}
@@ -28,6 +32,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name": "PC"}
@@ -36,6 +41,7 @@ Content-Type: application/json
 
 ### Add products START >>>>>>>>>>>>>>>>>>
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"Samsumg S10+", "price": 3000.00,"category": {"id": "[category_id]"}}
@@ -43,6 +49,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"IPhone X", "price": 3500.00,"category": {"id": "[category_id]"}}
@@ -50,6 +57,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"Xiaomi A3", "price": 2700.00,"category": {"id": "[category_id]"}}
@@ -57,6 +65,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"MacBook Pro i9", "price": 8700.00,"category": {"id": "[category_id]"}}
@@ -64,6 +73,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"Lenovo x10", "price": 6570.00,"category": {"id": "[category_id]"}}
@@ -71,6 +81,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"iMac PRO", "price": 18350.00,"category": {"id": "[category_id]"}}
@@ -78,6 +89,7 @@ Content-Type: application/json
 ###
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"ABS Master-Pro Ryzen 5 2400G", "price": 13670.00,"category": {"id": "[category_id]"}}
@@ -86,6 +98,7 @@ Content-Type: application/json
 
 
 POST http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name":"IPhone XXX", "price": 13500.00,"category": {"id": "7fce7f34-f510-4f72-902e-8501536461ce"}}
@@ -96,6 +109,7 @@ DELETE http://localhost:8080/admin/product/f62869a1-3c26-4585-b847-6ada0855517a
 
 ### Add some category
 POST http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"name": "AbraKadabra"}
@@ -106,6 +120,7 @@ DELETE http://localhost:8080/admin/category/e4efe69a-288d-43d4-81dd-055202bdf1e5
 
 ### Update category name
 PUT http://localhost:8080/admin/category
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"catId":"d4034ac5-3abc-4085-be47-3facb3afe0e6", "catName":"SomeName"}
@@ -113,6 +128,7 @@ Content-Type: application/json
 
 ### Update product price
 PUT http://localhost:8080/admin/product
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
 {"prodId":"d4034ac5-3abc-4085-be47-3facb3afe0e6", "price":666.66}
@@ -120,7 +136,31 @@ Content-Type: application/json
 
 ### Update user balance
 PUT http://localhost:8080/admin/user
+Authorization: Basic admin@mail.com 12345.com
 Content-Type: application/json
 
-{"userId":"johndo@mail.com", "balance":10000.00}
+{"userId":"sofa@mail.com", "balance":10000.00}
+###
+
+### Get Statistics
+
+###
+GET http://localhost:8080/admin/statistic/mostPopularProducts
+Authorization: Basic admin@mail.com 12345.com
+
+###
+
+GET http://localhost:8080/admin/statistic/mostProfitableProducts
+Authorization: Basic admin@mail.com 12345.com
+
+###
+
+GET http://localhost:8080/admin/statistic/mostActiveUser
+Authorization: Basic admin@mail.com 12345.com
+
+###
+
+GET http://localhost:8080/admin/statistic/mostProfitableUser
+Authorization: Basic admin@mail.com 12345.com
+
 ###

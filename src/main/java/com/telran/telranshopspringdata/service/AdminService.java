@@ -1,6 +1,10 @@
 package com.telran.telranshopspringdata.service;
 
+import com.telran.telranshopspringdata.controller.dto.ProductStatisticDto;
+import com.telran.telranshopspringdata.controller.dto.UserStatisticDto;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface AdminService {
     String addCategory(String categoryName);
@@ -10,4 +14,8 @@ public interface AdminService {
     boolean updateCategory(String categoryId, String categoryName);
     boolean changeProductPrice(String productId,BigDecimal price);
     boolean addBalance(String userEmail, BigDecimal balance);
+    List<ProductStatisticDto> getMostPopularProduct();
+    List<ProductStatisticDto> getMostProfitableProduct();
+    List<UserStatisticDto> getMostActiveUser();
+    List<UserStatisticDto> getMostProfitableUser();
 }

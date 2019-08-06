@@ -1,9 +1,8 @@
 package com.telran.telranshopspringdata.service;
 
-import com.telran.telranshopspringdata.data.CategoryRepository;
-import com.telran.telranshopspringdata.data.ProductOrderRepository;
-import com.telran.telranshopspringdata.data.ProductRepository;
-import com.telran.telranshopspringdata.data.UserRepository;
+import com.telran.telranshopspringdata.controller.dto.ProductStatisticDto;
+import com.telran.telranshopspringdata.controller.dto.UserStatisticDto;
+import com.telran.telranshopspringdata.data.*;
 import com.telran.telranshopspringdata.data.entity.CategoryEntity;
 import com.telran.telranshopspringdata.data.entity.ProductEntity;
 import com.telran.telranshopspringdata.service.exceptions.NotFoundServiceException;
@@ -14,7 +13,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -27,6 +30,8 @@ public class AdminServiceImpl implements AdminService {
     UserRepository userRepository;
     @Autowired
     ProductOrderRepository productOrderRepository;
+    @Autowired
+    OrderRepository orderRepository;
 
 
     @Override
@@ -107,5 +112,35 @@ public class AdminServiceImpl implements AdminService {
         }
         user.get().setBalance(balance);
         return true;
+    }
+
+    @Override
+    public List<ProductStatisticDto> getMostPopularProduct() {
+        return productOrderRepository.getPopularProductStatistics().map(Mapper::map).collect(toList());
+    }
+
+    @Override
+    public List<ProductStatisticDto> getMostProfitableProduct() {
+        return productOrderRepository.getProfitableProductStatistics().map(Mapper::map).collect(toList());
+    }
+
+    @Override
+    public List<UserStatisticDto> getMostActiveUser() {
+        List<UserStatisticDto> resStat = orderRepository.getMostActiveUser().map(Mapper::map).collect(toList());
+        resStat.forEach(stat -> stat.setProducts(
+                productOrderRepository.findByOrder_Owner_Email(stat.getUserEmail())
+                        .map(Mapper::map)
+                        .collect(Collectors.toList())));
+        return resStat;
+    }
+
+    @Override
+    public List<UserStatisticDto> getMostProfitableUser() {
+        List<UserStatisticDto> resStat = orderRepository.getMostProfitableUser().map(Mapper::map).collect(toList());
+        resStat.forEach(stat -> stat.setProducts(
+                productOrderRepository.findByOrder_Owner_Email(stat.getUserEmail())
+                        .map(Mapper::map)
+                        .collect(Collectors.toList())));
+        return resStat;
     }
 }
